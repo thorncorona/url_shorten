@@ -8,20 +8,26 @@ const adapter = new FileSync('db.json');
 const db = low(adapter);
 
 const express = require('express');
-const exphbs  = require('express-handlebars');
+const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 
 const HOSTED_DOMAIN = "http://localhost:3000";
 
 
 let app = express();
-let urlencodedParser = bodyParser.urlencoded({extended: false});
+let urlencodedParser = bodyParser.urlencoded({
+    extended: false
+});
 let jsonParser = bodyParser.json();
 
 // init db.json if doesn't exist
-db.defaults({shortLinks: {}});
+db.defaults({
+    shortLinks: {}
+});
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 
 // index
@@ -37,7 +43,11 @@ app.post('/shortLink', urlencodedParser, (req, res) => {
         const shortLink = nanoid(7);
         db.set(`shortLinks.${shortLink}`, url)
             .write();
-        res.render('shortened', {url, shortLink, HOSTED_DOMAIN});
+        res.render('shortened', {
+            url,
+            shortLink,
+            HOSTED_DOMAIN
+        });
     } else {
         res.send("invalid url!")
     }
